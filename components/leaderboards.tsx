@@ -133,60 +133,62 @@ export default function Leaderboards({ contractAddress, filterAddress }: Leaderb
     showActivity?: boolean
   }) => (
     <Card className="hover:shadow-md transition-shadow">
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
+      <CardContent className="p-3 md:p-4">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 md:gap-3 min-w-0 flex-1">
+            <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
               {getRankIcon(player.rank)}
               {getRankChange(player.rank, player.previousRank)}
             </div>
 
-            <Avatar className="h-10 w-10">
-              <AvatarFallback className="bg-primary/10 text-primary font-bold">
+            <Avatar className="h-8 w-8 md:h-10 md:w-10 flex-shrink-0">
+              <AvatarFallback className="bg-primary/10 text-primary font-bold text-xs md:text-sm">
                 {player.displayName ? player.displayName[0].toUpperCase() : formatAddress(player.address)[2]}
               </AvatarFallback>
             </Avatar>
 
-            <div className="flex-1">
-              <div className="flex items-center gap-2">
-                <p className="font-medium">{player.displayName || formatAddress(player.address)}</p>
-                <Badge variant="outline" className="text-xs">
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1 md:gap-2 mb-1">
+                <p className="font-medium text-sm md:text-base truncate">
+                  {player.displayName || formatAddress(player.address)}
+                </p>
+                <Badge variant="outline" className="text-xs flex-shrink-0">
                   Lvl {player.level}
                 </Badge>
               </div>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>{player.gamesPlayed} games</span>
+              <div className="flex items-center gap-2 md:gap-4 text-xs md:text-sm text-muted-foreground">
+                <span className="truncate">{player.gamesPlayed} games</span>
                 {player.streak > 0 && (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     <Zap className="h-3 w-3 text-orange-500" />
-                    <span>{player.streak} streak</span>
+                    <span>{player.streak}</span>
                   </div>
                 )}
               </div>
             </div>
           </div>
 
-          <div className="text-right space-y-1">
+          <div className="text-right space-y-1 flex-shrink-0">
             {showEarnings && (
-              <div className="flex items-center gap-1">
-                <DollarSign className="h-4 w-4 text-green-500" />
-                <span className="font-bold">{formatEarnings(player.totalEarnings)} ETH</span>
+              <div className="flex items-center gap-1 justify-end">
+                <DollarSign className="h-3 w-3 md:h-4 md:w-4 text-green-500" />
+                <span className="font-bold text-xs md:text-sm">{formatEarnings(player.totalEarnings)} STRK</span>
               </div>
             )}
             {showWinRate && (
-              <div className="flex items-center gap-1">
-                <Target className="h-4 w-4 text-blue-500" />
-                <span className="font-bold">{player.winRate.toFixed(1)}%</span>
+              <div className="flex items-center gap-1 justify-end">
+                <Target className="h-3 w-3 md:h-4 md:w-4 text-blue-500" />
+                <span className="font-bold text-xs md:text-sm">{player.winRate.toFixed(1)}%</span>
               </div>
             )}
             {showActivity && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4 text-purple-500" />
-                <span className="text-sm">{formatDistanceToNow(new Date(player.lastActive), { addSuffix: true })}</span>
+              <div className="flex items-center gap-1 justify-end">
+                <Clock className="h-3 w-3 md:h-4 md:w-4 text-purple-500" />
+                <span className="text-xs">{formatDistanceToNow(new Date(player.lastActive), { addSuffix: true })}</span>
               </div>
             )}
 
-            <div className="w-24">
+            <div className="w-16 md:w-24">
               <Progress value={getExperienceProgress(player.experience)} className="h-1" />
               <span className="text-xs text-muted-foreground">{player.experience % 1000}/1000 XP</span>
             </div>
@@ -217,20 +219,20 @@ export default function Leaderboards({ contractAddress, filterAddress }: Leaderb
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Trophy className="h-6 w-6 text-yellow-500" />
+          <h2 className="text-xl md:text-2xl font-bold flex items-center gap-2">
+            <Trophy className="h-5 w-5 md:h-6 md:w-6 text-yellow-500" />
             Leaderboards
           </h2>
-          <p className="text-muted-foreground">Top players and rankings across all game modes</p>
+          <p className="text-sm md:text-base text-muted-foreground">Top players and rankings across all game modes</p>
         </div>
         <Button
           variant="outline"
           size="sm"
           onClick={fetchLeaderboards}
           disabled={loading}
-          className="flex items-center gap-2 bg-transparent"
+          className="flex items-center gap-2 bg-transparent w-full sm:w-auto"
         >
           <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
           Refresh
@@ -239,41 +241,34 @@ export default function Leaderboards({ contractAddress, filterAddress }: Leaderb
 
       {/* Leaderboard Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-7">
-          <TabsTrigger value="top-players" className="flex items-center gap-1">
+        <TabsList className="grid w-full grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-1 h-auto">
+          <TabsTrigger value="top-players" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <Trophy className="h-3 w-3" />
-            <span className="hidden sm:inline">Top Players</span>
-            <span className="sm:hidden">Top</span>
+            <span>Top</span>
           </TabsTrigger>
-          <TabsTrigger value="top-earners" className="flex items-center gap-1">
+          <TabsTrigger value="top-earners" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <DollarSign className="h-3 w-3" />
-            <span className="hidden sm:inline">Earners</span>
-            <span className="sm:hidden">$</span>
+            <span>Earners</span>
           </TabsTrigger>
-          <TabsTrigger value="most-active" className="flex items-center gap-1">
+          <TabsTrigger value="most-active" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <Gamepad2 className="h-3 w-3" />
-            <span className="hidden sm:inline">Active</span>
-            <span className="sm:hidden">Act</span>
+            <span>Active</span>
           </TabsTrigger>
-          <TabsTrigger value="best-winrate" className="flex items-center gap-1">
+          <TabsTrigger value="best-winrate" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <Target className="h-3 w-3" />
-            <span className="hidden sm:inline">Win Rate</span>
-            <span className="sm:hidden">Win</span>
+            <span>Win Rate</span>
           </TabsTrigger>
-          <TabsTrigger value="streaks" className="flex items-center gap-1">
+          <TabsTrigger value="streaks" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <Zap className="h-3 w-3" />
-            <span className="hidden sm:inline">Streaks</span>
-            <span className="sm:hidden">Str</span>
+            <span>Streaks</span>
           </TabsTrigger>
-          <TabsTrigger value="rising" className="flex items-center gap-1">
+          <TabsTrigger value="rising" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <TrendingUp className="h-3 w-3" />
-            <span className="hidden sm:inline">Rising</span>
-            <span className="sm:hidden">Rise</span>
+            <span>Rising</span>
           </TabsTrigger>
-          <TabsTrigger value="recent" className="flex items-center gap-1">
+          <TabsTrigger value="recent" className="flex flex-col items-center gap-1 text-xs p-2 h-auto">
             <Clock className="h-3 w-3" />
-            <span className="hidden sm:inline">Recent</span>
-            <span className="sm:hidden">Rec</span>
+            <span>Recent</span>
           </TabsTrigger>
         </TabsList>
 
@@ -301,7 +296,7 @@ export default function Leaderboards({ contractAddress, filterAddress }: Leaderb
                 <DollarSign className="h-5 w-5 text-green-500" />
                 Top Earners
               </CardTitle>
-              <CardDescription>Players with the highest total earnings</CardDescription>
+              <CardDescription>Players with the highest total STRK earnings</CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               {leaderboardData.topEarners.map((player) => (
@@ -358,8 +353,8 @@ export default function Leaderboards({ contractAddress, filterAddress }: Leaderb
               {leaderboardData.longestStreaks.map((player) => (
                 <div key={player.address}>
                   <PlayerCard player={player} />
-                  <div className="mt-2 ml-16">
-                    <Badge variant="secondary" className="bg-orange-100 text-orange-800">
+                  <div className="mt-2 ml-8 md:ml-16">
+                    <Badge variant="secondary" className="bg-orange-100 text-orange-800 text-xs">
                       🔥 {player.streak} game win streak
                     </Badge>
                   </div>

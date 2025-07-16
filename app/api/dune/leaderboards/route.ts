@@ -1,107 +1,242 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Mock leaderboard data generator
-const generateMockLeaderboards = (contractAddress: string, filterAddress: string) => {
-  const generatePlayer = (rank: number, previousRank?: number): any => {
-    const gamesPlayed = Math.floor(Math.random() * 1000) + 50
-    const gamesWon = Math.floor(gamesPlayed * (Math.random() * 0.4 + 0.4)) // 40-80% win rate
-    const winRate = (gamesWon / gamesPlayed) * 100
-    const experience = Math.floor(Math.random() * 50000) + 1000
-
-    return {
-      address: `0x${Math.random().toString(16).substr(2, 40)}`,
-      rank,
-      previousRank: previousRank || rank + Math.floor(Math.random() * 10) - 5,
-      displayName: Math.random() > 0.7 ? `Player${rank}` : undefined,
-      gamesPlayed,
-      gamesWon,
-      winRate,
-      totalEarnings: (Math.random() * 100 + 10).toFixed(4),
-      averageGameTime: Math.floor(Math.random() * 300) + 120, // 2-7 minutes
-      streak: Math.floor(Math.random() * 20),
-      lastActive: new Date(Date.now() - Math.random() * 86400000).toISOString(), // Last 24 hours
-      level: Math.floor(experience / 1000) + 1,
-      experience,
-      achievements: Math.floor(Math.random() * 50) + 5,
-    }
-  }
-
-  // Generate different leaderboard categories
-  const topPlayers = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .sort((a, b) => b.gamesWon - a.gamesWon)
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  const topEarners = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .sort((a, b) => Number.parseFloat(b.totalEarnings) - Number.parseFloat(a.totalEarnings))
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  const mostActive = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .sort((a, b) => b.gamesPlayed - a.gamesPlayed)
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  const bestWinRate = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .filter((player) => player.gamesPlayed >= 10) // Minimum 10 games
-    .sort((a, b) => b.winRate - a.winRate)
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  const longestStreaks = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .map((player) => ({ ...player, streak: Math.floor(Math.random() * 50) + 1 }))
-    .sort((a, b) => b.streak - a.streak)
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  const recentlyActive = Array.from({ length: 20 }, (_, i) => generatePlayer(i + 1))
-    .map((player) => ({
-      ...player,
-      lastActive: new Date(Date.now() - Math.random() * 3600000).toISOString(), // Last hour
-    }))
-    .sort((a, b) => new Date(b.lastActive).getTime() - new Date(a.lastActive).getTime())
-    .map((player, index) => ({ ...player, rank: index + 1 }))
-
-  // Rising stars - players with biggest rank improvements
-  const rising = Array.from({ length: 20 }, (_, i) => {
-    const currentRank = i + 1
-    const previousRank = currentRank + Math.floor(Math.random() * 50) + 10 // They were much lower
-    return generatePlayer(currentRank, previousRank)
-  }).sort((a, b) => b.previousRank - b.rank - (a.previousRank - a.rank))
-
-  return {
-    topPlayers: topPlayers.slice(0, 15),
-    topEarners: topEarners.slice(0, 15),
-    mostActive: mostActive.slice(0, 15),
-    bestWinRate: bestWinRate.slice(0, 15),
-    longestStreaks: longestStreaks.slice(0, 15),
-    recentlyActive: recentlyActive.slice(0, 15),
-    rising: rising.slice(0, 15),
-    lastUpdated: new Date().toISOString(),
-  }
-}
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const contractAddress = searchParams.get("contract")
   const filterAddress = searchParams.get("from")
 
-  if (!contractAddress || !filterAddress) {
-    return NextResponse.json({ error: "Contract address and filter address are required" }, { status: 400 })
-  }
-
   try {
-    // In a real implementation, you would:
-    // 1. Query Dune for player statistics and rankings
-    // 2. Calculate different leaderboard categories
-    // 3. Track rank changes over time
-    // 4. Filter and sort players by various metrics
-
-    const leaderboards = generateMockLeaderboards(contractAddress, filterAddress)
+    // Mock data for demonstration - replace with actual Dune API calls
+    const mockLeaderboards = {
+      topPlayers: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 2,
+          displayName: "WordMaster",
+          gamesPlayed: 847,
+          gamesWon: 723,
+          winRate: 85.4,
+          totalEarnings: "1247.50",
+          averageGameTime: 180,
+          streak: 12,
+          lastActive: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
+          level: 15,
+          experience: 14750,
+          achievements: 23,
+        },
+        {
+          address: "0x2345678901bcdef12345678901bcdef123456789",
+          rank: 2,
+          previousRank: 1,
+          displayName: "PuzzlePro",
+          gamesPlayed: 692,
+          gamesWon: 578,
+          winRate: 83.5,
+          totalEarnings: "1089.25",
+          averageGameTime: 165,
+          streak: 8,
+          lastActive: new Date(Date.now() - 1000 * 60 * 45).toISOString(),
+          level: 13,
+          experience: 12890,
+          achievements: 19,
+        },
+        {
+          address: "0x3456789012cdef123456789012cdef1234567890",
+          rank: 3,
+          previousRank: 4,
+          displayName: "GuessGuru",
+          gamesPlayed: 534,
+          gamesWon: 445,
+          winRate: 83.3,
+          totalEarnings: "892.75",
+          averageGameTime: 195,
+          streak: 5,
+          lastActive: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+          level: 11,
+          experience: 10340,
+          achievements: 16,
+        },
+        {
+          address: "0x4567890123def1234567890123def12345678901",
+          rank: 4,
+          previousRank: 3,
+          gamesPlayed: 478,
+          gamesWon: 389,
+          winRate: 81.4,
+          totalEarnings: "756.50",
+          averageGameTime: 210,
+          streak: 3,
+          lastActive: new Date(Date.now() - 1000 * 60 * 60).toISOString(),
+          level: 9,
+          experience: 8950,
+          achievements: 14,
+        },
+        {
+          address: "0x5678901234ef12345678901234ef123456789012",
+          rank: 5,
+          previousRank: 6,
+          gamesPlayed: 423,
+          gamesWon: 342,
+          winRate: 80.9,
+          totalEarnings: "689.25",
+          averageGameTime: 225,
+          streak: 7,
+          lastActive: new Date(Date.now() - 1000 * 60 * 20).toISOString(),
+          level: 8,
+          experience: 7890,
+          achievements: 12,
+        },
+      ],
+      topEarners: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 1,
+          displayName: "CryptoKing",
+          gamesPlayed: 1247,
+          gamesWon: 1089,
+          winRate: 87.3,
+          totalEarnings: "2847.50",
+          averageGameTime: 175,
+          streak: 15,
+          lastActive: new Date(Date.now() - 1000 * 60 * 10).toISOString(),
+          level: 18,
+          experience: 17650,
+          achievements: 28,
+        },
+        {
+          address: "0x2345678901bcdef12345678901bcdef123456789",
+          rank: 2,
+          previousRank: 3,
+          displayName: "TokenHunter",
+          gamesPlayed: 1089,
+          gamesWon: 934,
+          winRate: 85.8,
+          totalEarnings: "2156.75",
+          averageGameTime: 160,
+          streak: 9,
+          lastActive: new Date(Date.now() - 1000 * 60 * 25).toISOString(),
+          level: 16,
+          experience: 15890,
+          achievements: 24,
+        },
+        {
+          address: "0x3456789012cdef123456789012cdef1234567890",
+          rank: 3,
+          previousRank: 2,
+          displayName: "RewardSeeker",
+          gamesPlayed: 934,
+          gamesWon: 789,
+          winRate: 84.5,
+          totalEarnings: "1923.25",
+          averageGameTime: 185,
+          streak: 6,
+          lastActive: new Date(Date.now() - 1000 * 60 * 35).toISOString(),
+          level: 14,
+          experience: 13450,
+          achievements: 21,
+        },
+      ],
+      mostActive: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 1,
+          displayName: "GameAddict",
+          gamesPlayed: 1847,
+          gamesWon: 1456,
+          winRate: 78.8,
+          totalEarnings: "1456.50",
+          averageGameTime: 145,
+          streak: 4,
+          lastActive: new Date(Date.now() - 1000 * 60 * 5).toISOString(),
+          level: 20,
+          experience: 19870,
+          achievements: 32,
+        },
+      ],
+      bestWinRate: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 1,
+          displayName: "Perfectionist",
+          gamesPlayed: 156,
+          gamesWon: 147,
+          winRate: 94.2,
+          totalEarnings: "456.75",
+          averageGameTime: 120,
+          streak: 18,
+          lastActive: new Date(Date.now() - 1000 * 60 * 40).toISOString(),
+          level: 7,
+          experience: 6890,
+          achievements: 15,
+        },
+      ],
+      longestStreaks: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 2,
+          displayName: "StreakMaster",
+          gamesPlayed: 234,
+          gamesWon: 198,
+          winRate: 84.6,
+          totalEarnings: "567.25",
+          averageGameTime: 155,
+          streak: 23,
+          lastActive: new Date(Date.now() - 1000 * 60 * 12).toISOString(),
+          level: 9,
+          experience: 8450,
+          achievements: 18,
+        },
+      ],
+      recentlyActive: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 1,
+          previousRank: 1,
+          displayName: "NightOwl",
+          gamesPlayed: 345,
+          gamesWon: 278,
+          winRate: 80.6,
+          totalEarnings: "678.50",
+          averageGameTime: 190,
+          streak: 6,
+          lastActive: new Date(Date.now() - 1000 * 60 * 2).toISOString(),
+          level: 10,
+          experience: 9670,
+          achievements: 16,
+        },
+      ],
+      rising: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          rank: 15,
+          previousRank: 45,
+          displayName: "RisingStar",
+          gamesPlayed: 89,
+          gamesWon: 67,
+          winRate: 75.3,
+          totalEarnings: "234.75",
+          averageGameTime: 205,
+          streak: 8,
+          lastActive: new Date(Date.now() - 1000 * 60 * 18).toISOString(),
+          level: 5,
+          experience: 4560,
+          achievements: 8,
+        },
+      ],
+      lastUpdated: new Date().toISOString(),
+    }
 
     return NextResponse.json({
-      leaderboards,
-      contract_address: contractAddress,
-      filter_address: filterAddress,
-      generated_at: new Date().toISOString(),
+      success: true,
+      leaderboards: mockLeaderboards,
     })
   } catch (error) {
     console.error("Error fetching leaderboards:", error)
-    return NextResponse.json({ error: "Failed to fetch leaderboards" }, { status: 500 })
+    return NextResponse.json({ success: false, error: "Failed to fetch leaderboards" }, { status: 500 })
   }
 }

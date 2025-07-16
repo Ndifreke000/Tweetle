@@ -1,84 +1,89 @@
 import { type NextRequest, NextResponse } from "next/server"
 
-// Mock gaming data generator
-const generateMockGameMetrics = (contractAddress: string, filterAddress: string) => {
-  const topPlayers = []
-  for (let i = 0; i < 10; i++) {
-    topPlayers.push({
-      address: `0x${Math.random().toString(16).substr(2, 40)}`,
-      gamesPlayed: Math.floor(Math.random() * 500) + 100,
-      winRate: Math.random() * 40 + 60, // 60-100% win rate
-    })
-  }
-  topPlayers.sort((a, b) => b.gamesPlayed - a.gamesPlayed)
-
-  const gameTypes = [
-    { type: "Daily Challenge", count: 18420, percentage: 52.1 },
-    { type: "Practice Mode", count: 8930, percentage: 25.3 },
-    { type: "Speed Round", count: 4670, percentage: 13.2 },
-    { type: "Hard Mode", count: 2890, percentage: 8.2 },
-    { type: "Custom Words", count: 420, percentage: 1.2 },
-  ]
-
-  const hourlyActivity = []
-  for (let hour = 0; hour < 24; hour++) {
-    // Simulate realistic gaming patterns (higher activity in evening hours)
-    let baseActivity = 50
-    if (hour >= 18 && hour <= 23) baseActivity = 200 // Evening peak
-    if (hour >= 12 && hour <= 17) baseActivity = 120 // Afternoon
-    if (hour >= 6 && hour <= 11) baseActivity = 80 // Morning
-
-    hourlyActivity.push({
-      hour,
-      games: Math.floor(baseActivity + Math.random() * 50),
-    })
-  }
-
-  const totalGames = 35420
-  const registeredPlayers = 12847
-  const uniqueWallets = 8934
-
-  return {
-    totalGamesPlayed: totalGames,
-    totalContractInteractions: totalGames * 3.2, // Average 3.2 interactions per game
-    uniqueWalletsInteracted: uniqueWallets,
-    playsPerPlayer: totalGames / registeredPlayers,
-    registeredPlayers: registeredPlayers,
-    dailyActiveUsers: Math.floor(registeredPlayers * 0.23), // 23% daily active rate
-    weeklyGrowth: Math.random() * 10 + 5, // 5-15% weekly growth
-    topPlayers,
-    gameTypeDistribution: gameTypes,
-    hourlyActivity,
-    averageGuesses: 4.1,
-    successRate: 94.2,
-  }
-}
-
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url)
   const contractAddress = searchParams.get("contract")
   const filterAddress = searchParams.get("from")
 
-  if (!contractAddress || !filterAddress) {
-    return NextResponse.json({ error: "Contract address and filter address are required" }, { status: 400 })
-  }
-
   try {
-    // In a real implementation, you would:
-    // 1. Query Dune for gaming-specific metrics
-    // 2. Calculate player statistics and engagement metrics
-    // 3. Aggregate game data and player behavior
-
-    const metrics = generateMockGameMetrics(contractAddress, filterAddress)
+    // Mock data for demonstration - replace with actual Dune API calls
+    const mockMetrics = {
+      totalGamesPlayed: 47823,
+      totalContractInteractions: 156789,
+      uniqueWalletsInteracted: 8934,
+      playsPerPlayer: 5.4,
+      registeredPlayers: 12456,
+      dailyActiveUsers: 2847,
+      weeklyGrowth: 12.3,
+      averageGuesses: 4.1,
+      successRate: 94.2,
+      topPlayers: [
+        {
+          address: "0x1234567890abcdef1234567890abcdef12345678",
+          gamesPlayed: 847,
+          winRate: 85.4,
+        },
+        {
+          address: "0x2345678901bcdef12345678901bcdef123456789",
+          gamesPlayed: 692,
+          winRate: 83.5,
+        },
+        {
+          address: "0x3456789012cdef123456789012cdef1234567890",
+          gamesPlayed: 534,
+          winRate: 83.3,
+        },
+        {
+          address: "0x4567890123def1234567890123def12345678901",
+          gamesPlayed: 478,
+          winRate: 81.4,
+        },
+        {
+          address: "0x5678901234ef12345678901234ef123456789012",
+          gamesPlayed: 423,
+          winRate: 80.9,
+        },
+      ],
+      gameTypeDistribution: [
+        { type: "Daily Challenge", count: 28694, percentage: 60.0 },
+        { type: "Practice Mode", count: 11469, percentage: 24.0 },
+        { type: "Speed Round", count: 4782, percentage: 10.0 },
+        { type: "Hard Mode", count: 2878, percentage: 6.0 },
+      ],
+      hourlyActivity: [
+        { hour: 0, games: 234 },
+        { hour: 1, games: 189 },
+        { hour: 2, games: 156 },
+        { hour: 3, games: 123 },
+        { hour: 4, games: 145 },
+        { hour: 5, games: 178 },
+        { hour: 6, games: 267 },
+        { hour: 7, games: 345 },
+        { hour: 8, games: 456 },
+        { hour: 9, games: 523 },
+        { hour: 10, games: 589 },
+        { hour: 11, games: 634 },
+        { hour: 12, games: 678 },
+        { hour: 13, games: 645 },
+        { hour: 14, games: 598 },
+        { hour: 15, games: 567 },
+        { hour: 16, games: 534 },
+        { hour: 17, games: 489 },
+        { hour: 18, games: 445 },
+        { hour: 19, games: 398 },
+        { hour: 20, games: 356 },
+        { hour: 21, games: 312 },
+        { hour: 22, games: 278 },
+        { hour: 23, games: 245 },
+      ],
+    }
 
     return NextResponse.json({
-      metrics,
-      contract_address: contractAddress,
-      filter_address: filterAddress,
-      generated_at: new Date().toISOString(),
+      success: true,
+      metrics: mockMetrics,
     })
   } catch (error) {
     console.error("Error fetching game metrics:", error)
-    return NextResponse.json({ error: "Failed to fetch game metrics" }, { status: 500 })
+    return NextResponse.json({ success: false, error: "Failed to fetch game metrics" }, { status: 500 })
   }
 }
