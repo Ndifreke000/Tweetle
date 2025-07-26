@@ -1,3 +1,6 @@
+<img width="1913" height="879" alt="Screenshot from 2025-07-26 18-21-55" src="https://github.com/user-attachments/assets/a012f525-6702-498e-8d74-c369d584a4ec" />
+
+
 # Next.js Dune API site
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
@@ -28,6 +31,3 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
-
-
-<img width="1913" height="879" alt="Screenshot from 2025-07-26 18-21-55" src="https://github.com/user-attachments/assets/e0f60d67-69de-4732-83fb-160b47ed2879" />
