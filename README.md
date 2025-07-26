@@ -28,3 +28,6 @@ Continue building your app on:
 2. Deploy your chats from the v0 interface
 3. Changes are automatically pushed to this repository
 4. Vercel deploys the latest version from this repository
+
+
+<img width="1913" height="879" alt="Screenshot from 2025-07-26 18-21-55" src="https://github.com/user-attachments/assets/e0f60d67-69de-4732-83fb-160b47ed2879" />
