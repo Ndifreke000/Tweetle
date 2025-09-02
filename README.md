@@ -15,7 +15,7 @@ Any changes you make to your deployed app will be automatically pushed to this r
 
 ## Deployment
 
-Your project is live at:
+Your project is live at the link below:
 
 **[https://vercel.com/ndifreke000s-projects/v0-next-js-dune-api-site](https://vercel.com/ndifreke000s-projects/v0-next-js-dune-api-site)**
 
