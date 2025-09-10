@@ -1,7 +1,7 @@
 <img width="1913" height="879" alt="Screenshot from 2025-07-26 18-21-55" src="https://github.com/user-attachments/assets/a012f525-6702-498e-8d74-c369d584a4ec" />
 
 
-# Next.js Dune API site
+# Next.js Dune API sitee
 
 *Automatically synced with your [v0.dev](https://v0.dev) deployments*
 
